@@ -1,0 +1,29 @@
+## OS
+.DS_Store
+
+## IDEs and editors
+.idea/
+*.iml
+.vscode/
+
+## Build outputs
+target/
+build/
+out/
+
+## Gradle
+.gradle/
+**/build/
+
+## Maven
+**/target/
+dependency-reduced-pom.xml
+
+## Logs
+*.log
+
+## Others
+.classpath
+.project
+.settings/
+

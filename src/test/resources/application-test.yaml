@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: Interview API Test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  h2:
+    console:
+      enabled: false
+  messages:
+    basename: i18n/messages,ValidationMessages
+    encoding: UTF-8
+
+logging:
+  level:
+    root: INFO
+    com.example.account: DEBUG
+
+
+
+
+
+
+
