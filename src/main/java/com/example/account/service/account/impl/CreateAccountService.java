@@ -2,6 +2,7 @@ package com.example.account.service.account.impl;
 
 import com.example.account.dto.account.request.AccountCreateRequestDTO;
 import com.example.account.dto.account.response.AccountCreateResponseDTO;
+import com.example.account.mapper.AccountMapper;
 import com.example.account.model.account.AccountEntity;
 import com.example.account.repository.AccountRepository;
 import com.example.account.service.account.ICreateAccountService;
@@ -24,6 +25,7 @@ public class CreateAccountService implements ICreateAccountService {
     
     private final AccountRepository accountRepository;
     private final AccountValidator accountValidator;
+    private final AccountMapper accountMapper = AccountMapper.INSTANCE;
     
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
@@ -59,11 +61,7 @@ public class CreateAccountService implements ICreateAccountService {
         AccountEntity savedAccount = accountRepository.save(accountEntity);
         log.info("Account created successfully with ID: {}", accountId);
         
-        return AccountCreateResponseDTO.builder()
-                .accountId(savedAccount.getAccountId())
-                .accountName(savedAccount.getAccountName())
-                .status(savedAccount.getStatus())
-                .build();
+        return accountMapper.toCreateResponseDTO(savedAccount);
     }
 }
 

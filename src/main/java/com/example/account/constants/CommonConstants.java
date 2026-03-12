@@ -12,6 +12,7 @@ public final class CommonConstants {
     // API Endpoints
     public static final String API_V1_PREFIX = "/api/v1";
     public static final String ACCOUNT_API_ENDPOINT = "/accounts";
+    public static final String WELCOME_API_ENDPOINT = "/api/welcome";
     
     // Account API Endpoints (relative to controller base path)
     public static final String ACCOUNT_CREATE_API_ENDPOINT = "";

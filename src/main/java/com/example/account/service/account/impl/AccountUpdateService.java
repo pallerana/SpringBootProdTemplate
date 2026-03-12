@@ -3,6 +3,7 @@ package com.example.account.service.account.impl;
 import com.example.account.dto.account.request.AccountUpdateRequestDTO;
 import com.example.account.dto.account.response.AccountUpdateResponseDTO;
 import com.example.account.exception.AccountNotFoundException;
+import com.example.account.mapper.AccountMapper;
 import com.example.account.model.account.AccountEntity;
 import com.example.account.repository.AccountRepository;
 import com.example.account.service.account.IAccountUpdateService;
@@ -24,6 +25,7 @@ public class AccountUpdateService implements IAccountUpdateService {
     
     private final AccountRepository accountRepository;
     private final AccountValidator accountValidator;
+    private final AccountMapper accountMapper = AccountMapper.INSTANCE;
     
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
@@ -58,11 +60,7 @@ public class AccountUpdateService implements IAccountUpdateService {
         AccountEntity savedAccount = accountRepository.save(existingAccount);
         log.info("Account updated successfully with ID: {}", accountId);
         
-        return AccountUpdateResponseDTO.builder()
-                .accountId(savedAccount.getAccountId())
-                .accountName(savedAccount.getAccountName())
-                .status(savedAccount.getStatus())
-                .build();
+        return accountMapper.toUpdateResponseDTO(savedAccount);
     }
     
     @Override
@@ -122,11 +120,7 @@ public class AccountUpdateService implements IAccountUpdateService {
         AccountEntity savedAccount = accountRepository.save(existingAccount);
         log.info("Account patched successfully with ID: {}", accountId);
         
-        return AccountUpdateResponseDTO.builder()
-                .accountId(savedAccount.getAccountId())
-                .accountName(savedAccount.getAccountName())
-                .status(savedAccount.getStatus())
-                .build();
+        return accountMapper.toUpdateResponseDTO(savedAccount);
     }
 }
 

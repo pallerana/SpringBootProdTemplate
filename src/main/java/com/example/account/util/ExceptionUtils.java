@@ -8,8 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 
 import java.time.OffsetDateTime;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Utility class for exception handling and error response building.
@@ -72,16 +75,19 @@ public final class ExceptionUtils {
      * @return Map of field names to resolved error messages
      */
     public static Map<String, String> processValidationErrors(org.springframework.validation.ObjectError[] fieldErrors) {
-        Map<String, String> errors = new HashMap<>();
-        for (org.springframework.validation.ObjectError error : fieldErrors) {
-            if (error instanceof FieldError) {
-                FieldError fieldError = (FieldError) error;
-                String fieldName = fieldError.getField();
-                String errorMessage = resolveValidationErrorMessage(fieldError);
-                errors.put(fieldName, errorMessage != null ? errorMessage : "");
-            }
-        }
-        return errors;
+        return Arrays.stream(fieldErrors)
+                .filter(error -> error instanceof FieldError)
+                .map(FieldError.class::cast)
+                .map(fieldError -> new ErrorDetail(
+                        fieldError.getField(),
+                        Optional.ofNullable(resolveValidationErrorMessage(fieldError)).orElse(""))
+                )
+                .collect(Collectors.toMap(
+                        ErrorDetail::field,
+                        ErrorDetail::message,
+                        (existing, replacement) -> existing,
+                        LinkedHashMap::new
+                ));
     }
 
     /**
@@ -158,11 +164,13 @@ public final class ExceptionUtils {
      * @return Account identifier as string
      */
     public static String extractAccountIdentifier(AccountNotFoundException ex) {
-        if (ex.getAccountId() != null) {
-            return ex.getAccountId();
-        } else {
-            return ex.getMessage();
-        }
+        return Optional.ofNullable(ex.getAccountId())
+                .orElseGet(ex::getMessage);
     }
+
+    /**
+     * Simple record to hold validation error details.
+     */
+    public record ErrorDetail(String field, String message) { }
 }
 

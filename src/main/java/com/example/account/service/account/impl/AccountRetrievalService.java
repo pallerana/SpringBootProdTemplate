@@ -7,7 +7,9 @@ import com.example.account.exception.AccountNotFoundException;
 import com.example.account.mapper.AccountMapper;
 import com.example.account.model.account.AccountEntity;
 import com.example.account.repository.AccountRepository;
+import com.example.account.repository.AccountSpecifications;
 import com.example.account.service.account.IAccountRetrievalService;
+import com.example.account.util.DtoConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -56,23 +58,17 @@ public class AccountRetrievalService implements IAccountRetrievalService {
         
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "id"));
         
-        // Query with filters
-        Page<AccountEntity> accountPage = accountRepository.findAccountsWithFilters(
-                request.getAccountName(),
-                request.getAccountId(),
-                request.getCurrency(),
-                request.getCountryCode(),
-                request.getCity(),
-                request.getState(),
-                request.getZipcode(),
-                request.getStatus(),
+        // Build dynamic JPA Specification from filters
+        Page<AccountEntity> accountPage = accountRepository.findAll(
+                AccountSpecifications.withFilters(request),
                 pageable
         );
         
-        // Convert to DTOs using MapStruct
-        List<AccountDetailsResponseDTO> accounts = accountPage.getContent().stream()
-                .map(accountMapper::toDetailsDTO)
-                .collect(Collectors.toList());
+        // Convert to DTOs using MapStruct and DtoConverter
+        List<AccountDetailsResponseDTO> accounts = DtoConverter.convertList(
+                accountPage.getContent(),
+                accountMapper::toDetailsDTO
+        );
         
         return AccountListResponseDTO.builder()
                 .accounts(accounts)

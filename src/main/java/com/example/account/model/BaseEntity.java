@@ -25,6 +25,9 @@ import java.time.OffsetDateTime;
 @SuperBuilder
 public abstract class BaseEntity {
 
+    // Field name constant to avoid hardcoded strings in specifications
+    public static final String FIELD_STATUS = "status";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

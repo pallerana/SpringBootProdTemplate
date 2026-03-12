@@ -23,6 +23,20 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "accounts")
 public class AccountEntity extends BaseEntity {
 
+    // Field name constants to avoid hardcoded strings in queries/specifications
+    public static final String FIELD_ACCOUNT_ID = "accountId";
+    public static final String FIELD_ACCOUNT_NAME = "accountName";
+    public static final String FIELD_EMAIL = "email";
+    public static final String FIELD_WEBSITE = "website";
+    public static final String FIELD_COUNTRY = "country";
+    public static final String FIELD_COUNTRY_CODE = "countryCode";
+    public static final String FIELD_CURRENCY = "currency";
+    public static final String FIELD_ADDRESS_LINE1 = "addressLine1";
+    public static final String FIELD_ADDRESS_LINE2 = "addressLine2";
+    public static final String FIELD_CITY = "city";
+    public static final String FIELD_STATE = "state";
+    public static final String FIELD_ZIPCODE = "zipcode";
+
     @Column(name = AccountDbFieldConstants.ACCOUNT_ID_COLUMN_NAME, unique = true, nullable = false, length = 100)
     private String accountId;
 

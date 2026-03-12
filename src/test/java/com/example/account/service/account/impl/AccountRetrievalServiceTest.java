@@ -17,13 +17,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for AccountRetrievalService.
@@ -97,8 +100,7 @@ class AccountRetrievalServiceTest {
                 1L
         );
 
-        when(accountRepository.findAccountsWithFilters(
-                eq("Test"), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), any(Pageable.class)))
+        when(accountRepository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(accountPage);
 
         // Act
@@ -110,8 +112,7 @@ class AccountRetrievalServiceTest {
         assertEquals(1, result.getPageNumber());
         assertEquals(25, result.getPageSize());
         assertEquals(1L, result.getTotalItems());
-        verify(accountRepository).findAccountsWithFilters(anyString(), any(), any(), any(), 
-                any(), any(), any(), any(), any(Pageable.class));
+        verify(accountRepository).findAll(any(Specification.class), any(Pageable.class));
     }
 
     @Test
@@ -128,8 +129,7 @@ class AccountRetrievalServiceTest {
                 0L
         );
 
-        when(accountRepository.findAccountsWithFilters(
-                isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), any(Pageable.class)))
+        when(accountRepository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(emptyPage);
 
         // Act
@@ -153,8 +153,7 @@ class AccountRetrievalServiceTest {
                 0L
         );
 
-        when(accountRepository.findAccountsWithFilters(
-                isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), any(Pageable.class)))
+        when(accountRepository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(emptyPage);
 
         // Act
